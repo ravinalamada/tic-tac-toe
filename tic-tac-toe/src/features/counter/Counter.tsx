@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import { useAppSelector, useAppDispatch } from '../../redux/hooks';
 import {
   decrement,
   increment,
@@ -17,7 +17,8 @@ export function Counter() {
   const [incrementAmount, setIncrementAmount] = useState('2');
 
   const incrementValue = Number(incrementAmount) || 0;
-
+ console.log(count);
+ 
   return (
     <div>
       <div className={styles.row}>
