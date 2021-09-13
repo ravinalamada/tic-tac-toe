@@ -3,33 +3,15 @@ import styled from 'styled-components';
 import ellipseIcon from '../icons/ellipse.svg'
 import crossIcon from '../icons/cross.svg'
 import { mediaQueries } from '../style/mediaQueries';
+import { useDispatch, useSelector } from "react-redux";
+import { setPlayers, selectPlayers } from "../slices/userSlice";
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { AppThunk } from "../redux/store";
 
 const Form= styled.form `
 background: white;
 height: 100vh;
-
-  h2 {
-    font-family: Usuazi Hosomozi;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 72px;
-    line-height: 72px;
-    color: #000000;
-    padding-block-start: 40px;
-    padding-block-end: 90px;
-    margin:0;
-  
-  ${mediaQueries('md', 'lg')`
-    font-size: 40px;
-    line-height: 40px;
-  `}
-  ${mediaQueries(null, 'md')`
-    font-size: 19px;
-    line-height: 19px;
-  `}
-
-  }
-
+text-align: center;
   p {
     font-family: Usuazi Hosomozi;
     font-style: normal;
@@ -154,43 +136,38 @@ const Button = styled.button `
 `;
 
 export interface FormProps{
-   handleStart?:(players: string[]) => void
+   handleStart?:(players: string[]) => void;
+   time: number
 }
 
-
-
-
-
 export const StartScreen=(props: FormProps)=> {
-  const { handleStart } = props;
+  const { handleStart, time } = props;
+  const dispatch = useAppDispatch();
+
+  // const players = useAppSelector(selectPlayers);
+  // console.log(players);
+  
   const [players, setPlayers] = useState(["", ""]);
-  const [time, setTime] = useState(3)
+  // const [time, setTime] = useState(3)
   const handleName = (event: FormEvent<HTMLInputElement>, index: number) => {
     const newPlayers = [...players];
     newPlayers.splice(index, 1, event.currentTarget.value);
-    setPlayers(newPlayers);
+    setPlayers(newPlayers)
   };
+
   const canStart = useMemo(
-    () => players.every((player) => player && player.length > 0),
+    () => players.every((player: string) => player && player.length > 0),
     [players]
   );
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!canStart) return;
-    handleStart && handleStart(players);
+    handleStart && handleStart(players)
   };
-
-  useEffect(() => {
-    setTimeout(() => {
-      if(time > 0) {
-       setTime((prevTime) => prevTime - 1)
-      }
-    }, 1000)
-  }, [time])
   
   return (
       <Form onSubmit={handleSubmit}>
-        <h2>Tic tac toe</h2>
         <FormWrapper>
           <Fieldset>
             <Icons src={ellipseIcon} alt="ellipse" />
@@ -208,11 +185,12 @@ export const StartScreen=(props: FormProps)=> {
               onChange={(e) => handleName(e, 1)}/> 
           </Fieldset>
           <p>turn Time limit in seconds:
-          <span>{time}s</span>
+          <span>{time} s</span>
           </p>
         </FormWrapper>
-        <Button type="submit" disabled={!canStart}>Start</Button>
+        <Button type="submit" >Start</Button>
       </Form>
+
   )
 }
 
