@@ -11,7 +11,6 @@ interface Props {
           {name && `${name} !`}
           {!name && "Draw !"}
         </h1>
-
         <button onClick={handleRestart}>Restart</button>
       </div>
     );

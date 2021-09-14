@@ -1,18 +1,26 @@
-import { useState, useMemo, FormEvent, useEffect } from "react";
+import { useMemo, FormEvent} from "react";
 import styled from 'styled-components';
 import ellipseIcon from '../icons/ellipse.svg'
 import crossIcon from '../icons/cross.svg'
 import { mediaQueries } from '../style/mediaQueries';
-import { useDispatch, useSelector } from "react-redux";
-import { setPlayers, selectPlayers } from "../slices/userSlice";
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { AppThunk } from "../redux/store";
+import { setPlayers} from "../redux/slices/gameSlice";
+import { useAppDispatch } from '../redux/hooks';
 
-const Form= styled.form `
+export const Form= styled.form `
 background: white;
 height: 100vh;
 text-align: center;
-  p {
+
+  fieldset:nth-of-type(1){
+   margin-bottom: 24px;
+  }
+
+  fieldset:nth-of-type(2){
+   margin-bottom: 32px;
+  }
+`
+
+export const Time = styled.p `
     font-family: Usuazi Hosomozi;
     font-style: normal;
     font-weight: normal;
@@ -20,6 +28,7 @@ text-align: center;
     line-height: 48px;
     color: #000000;
     margin: 0;
+    text-align: left;
 
     span {
       font-family: Usuazi Hosomozi;
@@ -48,16 +57,17 @@ text-align: center;
       line-height: 16px;
     `}
 
-}
+
 `
 
-const FormWrapper =styled.div`
+export const FormWrapper =styled.div`
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  width: 80%;
+  margin-inline-start: auto;
 `;
 
-const Fieldset = styled.fieldset`
+export const Fieldset = styled.fieldset`
   border-color: transparent;
   background-color: transparent;
   padding: 0;
@@ -65,9 +75,7 @@ const Fieldset = styled.fieldset`
   display: flex;
   align-items: center;
   gap: 39px;
-  width: 71%;
-  margin-inline-start: auto;
-  margin-inline-end: auto;
+  width: 100%;
   ${mediaQueries('md', 'lg')`
     gap: 30px;
   `}
@@ -77,7 +85,7 @@ const Fieldset = styled.fieldset`
   
 `;
 
-const Icons= styled.img`
+export const Icons= styled.img`
 ${mediaQueries('md', 'lg')`
     max-width: 40px;
     max-height:40px
@@ -88,7 +96,7 @@ ${mediaQueries('md', 'lg')`
   `}
 `;
 
-const Input= styled.input`
+export const Input= styled.input`
   outline:none;
   border-color: transparent;
   padding: 0;
@@ -98,8 +106,13 @@ const Input= styled.input`
   font-weight: normal;
   font-size: 48px;
   line-height: 48px;
-  color: #8B8585;
+  color: #000000;
   width: 100%;
+
+  &::placeholder {
+    color: #8B8585;
+   
+  }
   
   ${mediaQueries('md', 'lg')`
     font-size: 30px;
@@ -111,7 +124,7 @@ const Input= styled.input`
   `}
 `;
 
-const Button = styled.button `
+export const Button = styled.button `
   border-color: transparent;
   background-color: transparent;
   font-family: Usuazi Hosomozi;
@@ -121,8 +134,8 @@ const Button = styled.button `
   line-height: 72px;
   text-align: center;
   color: #000000;
-  padding-block-start: 31px;
   margin-block-start: 0;
+  outline: none;
 
   ${mediaQueries('md', 'lg')`
     font-size: 40px;
@@ -138,21 +151,17 @@ const Button = styled.button `
 export interface FormProps{
    handleStart?:(players: string[]) => void;
    time: number
+   players: string[]
 }
 
 export const StartScreen=(props: FormProps)=> {
-  const { handleStart, time } = props;
+  const { handleStart, time, players } = props;
   const dispatch = useAppDispatch();
-
-  // const players = useAppSelector(selectPlayers);
-  // console.log(players);
   
-  const [players, setPlayers] = useState(["", ""]);
-  // const [time, setTime] = useState(3)
   const handleName = (event: FormEvent<HTMLInputElement>, index: number) => {
     const newPlayers = [...players];
     newPlayers.splice(index, 1, event.currentTarget.value);
-    setPlayers(newPlayers)
+    dispatch(setPlayers(newPlayers))
   };
 
   const canStart = useMemo(
@@ -184,9 +193,9 @@ export const StartScreen=(props: FormProps)=> {
               value={players[1]}
               onChange={(e) => handleName(e, 1)}/> 
           </Fieldset>
-          <p>turn Time limit in seconds:
-          <span>{time} s</span>
-          </p>
+          <Time>turn Time limit in seconds:
+          <span>{time}s</span>
+          </Time>
         </FormWrapper>
         <Button type="submit" >Start</Button>
       </Form>
