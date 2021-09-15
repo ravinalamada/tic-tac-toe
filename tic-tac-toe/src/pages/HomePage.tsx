@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import Game from "./Game";
 import { StartScreen } from "./StartScreen";
 import { mediaQueries } from "../style/mediaQueries";
-import { setPlayers, setTime,setTurn, setStatus, selectGame, setBoard, setWinner } from "../redux/slices/gameSlice";
+import { setScore1, setScore2, setPlayers, setTime,setTurn, setStatus, selectGame, setBoard, setWinner } from "../redux/slices/gameSlice";
 import styled from 'styled-components';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { ConsecutiveGame } from "./ConsecutiveGame";
@@ -32,7 +32,7 @@ const Heading = styled.h1`
 `;
 const Home =() =>  {
   const dispatch = useAppDispatch()
-  const {players, turn, winner, board, time, status} = useAppSelector(selectGame)
+  const {players, turn, winner, board, time, status, score1, score2} = useAppSelector(selectGame)
   let winningPositionsIndex = 0;
    
   useEffect(() => {
@@ -68,19 +68,22 @@ const Home =() =>  {
     dispatch(setStatus(board.filter((value) => !value).length ? "started" : "finished"));
   }, [board, players, status]);
 
-  useEffect(() => {
-    setTimeout(() => {
-            if(status === 'started' && time > 0 && turn === 'X') {
-              dispatch(setTime(time - 1))  
-            }else if(status === 'started' && time > 0 && turn === 'O'){ 
-                dispatch(setTime(time - 1))
-            }
+useEffect(() => {
+    if(!winner && time > 0 && status === 'started') {
+      setTimeout(() => {
+        if(turn === 'X') {
+          dispatch(setTime(time - 1))  
+        }else if(turn === 'O'){ 
+            dispatch(setTime(time - 1))
+        }
 
-       }, 1000)
-  }, [ turn, time])
-
+      }, 1000)
+    }
+    
+  }, [winner, turn, time])
+ 
   const handleClick = (index: number): void => {
-    if (index < 0 || index > 9 || winner) return;
+    if (index < 0 || index > 9  || winner) return;
     const newBoard = [...board];
     newBoard.splice(index, 1, turn);
     dispatch(setBoard(newBoard));
@@ -88,7 +91,6 @@ const Home =() =>  {
     dispatch(setTurn(newTurn));
     dispatch(setTime(3))
   };
-  
   const handleStart = (players: string[]) => {
     dispatch(setPlayers(players));
     dispatch(setTurn("X"));
@@ -97,7 +99,6 @@ const Home =() =>  {
 
   const handleRestart = () => {
     dispatch(setBoard(Array(9).fill("")));
-    dispatch(setWinner(""));
     dispatch(setStatus("consecutive"));
     dispatch(setTime(3))
   };
@@ -106,8 +107,21 @@ const Home =() =>  {
     dispatch(setBoard(Array(9).fill("")));
     dispatch(setWinner(""));
     dispatch(setStatus("started"));
-    dispatch(setTime(3))
+    dispatch(setTime(time > 0 && 3))
   } 
+
+  useEffect(() => {
+  if(status === 'started' && time === 0 && turn === 'O') {
+    dispatch(setScore2(score2 + 1))
+  }if(status === 'started' && time === 0 && turn === 'X') {
+    dispatch(setScore2(score2 + 1))
+  }
+  else if(winner && winner === players[0]) {
+      dispatch(setScore1(score1+ 1))
+    }else if(winner && winner === players[1]){
+      dispatch(setScore2(score2 + 1))
+  }
+  },[winner,turn, time, players])
 
   const rebootGame = () => {
     dispatch(setBoard(Array(9).fill("")));
@@ -115,13 +129,15 @@ const Home =() =>  {
     dispatch(setPlayers(['', '']))
     dispatch(setStatus("new"));
     dispatch(setTime(3))
+    dispatch(setScore1(0))
+    dispatch(setScore2(0))
   }
-         
+    
   return (
     <div>
       <Heading>Tic tac toe</Heading>
       { status === "new" && <StartScreen players={players} time={time} handleStart={handleStart} /> }
-      { status === "consecutive" && <ConsecutiveGame time={time} players={players} startAgain={startAgain} rebootGame={rebootGame}/> }
+      { status === "consecutive" && <ConsecutiveGame score2={score2} score1={score1} time={time} players={players} startAgain={startAgain} rebootGame={rebootGame}/> }
       { status === "finished" && <Game players={players} turn={turn} winner={winner} time={time} status={status} player={players} board={board} handleClick={handleClick} handleRestart={handleRestart} /> }
       { status === "started" && <Game players={players} turn={turn} winner={winner} time={time} status={status} player={players} board={board} handleClick={handleClick} handleRestart={handleRestart}/> }
     </div>

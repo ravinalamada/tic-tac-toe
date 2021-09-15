@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import ellipseIcon from '../icons/ellipse.svg'
 import crossIcon from '../icons/cross.svg'
 import { mediaQueries } from '../style/mediaQueries';
-import { setPlayers} from "../redux/slices/gameSlice";
+import { setPlayers, setTime} from "../redux/slices/gameSlice";
 import { useAppDispatch } from '../redux/hooks';
 
 export const Form= styled.form `
@@ -30,7 +30,7 @@ export const Time = styled.p `
     margin: 0;
     text-align: left;
 
-    span {
+    input, span {
       font-family: Usuazi Hosomozi;
       font-style: normal;
       font-weight: normal;
@@ -38,6 +38,14 @@ export const Time = styled.p `
       line-height: 48px;
       color: #8B8585;
       padding-left: 16px;
+      width: 28px;
+      outline: none;
+      border-color: transparent;
+
+      ::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+      }
+
       ${mediaQueries('md', 'lg')`
         font-size: 30px;
         line-height: 30px;
@@ -56,6 +64,10 @@ export const Time = styled.p `
       font-size: 16px;
       line-height: 16px;
     `}
+
+    span {
+      padding-left: 0;
+    }
 
 
 `
@@ -155,6 +167,10 @@ export interface FormProps{
 }
 
 export const StartScreen=(props: FormProps)=> {
+
+  
+
+
   const { handleStart, time, players } = props;
   const dispatch = useAppDispatch();
   
@@ -162,6 +178,11 @@ export const StartScreen=(props: FormProps)=> {
     const newPlayers = [...players];
     newPlayers.splice(index, 1, event.currentTarget.value);
     dispatch(setPlayers(newPlayers))
+  };
+
+  const handleTime = (event: FormEvent<HTMLInputElement>) => {
+    const value = event.currentTarget.value;
+    dispatch(setTime(value))
   };
 
   const canStart = useMemo(
@@ -194,7 +215,8 @@ export const StartScreen=(props: FormProps)=> {
               onChange={(e) => handleName(e, 1)}/> 
           </Fieldset>
           <Time>turn Time limit in seconds:
-          <span>{time}s</span>
+          <input type="number" max={60} min={3} value={time} onChange={handleTime}/>
+           <span>s</span>
           </Time>
         </FormWrapper>
         <Button type="submit" >Start</Button>

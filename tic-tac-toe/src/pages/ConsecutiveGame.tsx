@@ -10,6 +10,8 @@ interface Props {
     time: number
     rebootGame(): void;
     startAgain:() => void;
+    score1: number
+    score2: number
 }
 
 const Wrapper = styled.div`
@@ -38,17 +40,18 @@ const Name = styled.p`
   `}
 `;
 export const ConsecutiveGame =(props: Props)=> {
-    const {rebootGame, startAgain, time, players} = props
-  return (
+    const {rebootGame, startAgain, time, players, score1, score2} = props
+  
+    return (
     <Form>
         <FormWrapper>
           <Fieldset>
             <Icons src={ellipseIcon} alt="ellipse" />
-            <Name>{players[0]}</Name> 
+              <Name>{score1} - {players[0]}</Name> 
           </Fieldset>
           <Fieldset>
             <Icons src={crossIcon} alt='cross'/>
-            <Name>{players[1]}</Name>
+            <Name>{score2} - {players[1]}</Name>
           </Fieldset>
           <Time>turn Time limit in seconds:
           <span>{time}s</span>

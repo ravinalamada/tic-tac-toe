@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState, AppThunk } from '../../redux/store';
+import { createSlice, } from '@reduxjs/toolkit';
+import { RootState } from '../../redux/store';
 
 export interface gameState {
   board: string[];
@@ -7,9 +7,8 @@ export interface gameState {
   winner: string | null;
   players: string[];
   turn: string;
-  // handleClick: (index: number) => void;
-  // handleRestart: () => void;
-  // handleStart: (players: string[]) => void;
+  score1: number;
+  score2: number
   time: number
 }
 
@@ -19,7 +18,9 @@ const initialState: gameState = {
   winner: null,
   players: ['', ''],
   turn: 'X',
-  time: 3
+  time: 3,
+  score1: 0,
+  score2: 0,
 };
 
 export const gameSlice = createSlice({
@@ -45,13 +46,19 @@ export const gameSlice = createSlice({
     setStatus: (state, action) => {
       state.status = action.payload;
     },
+    setScore1: (state, action) => {
+      state.score1 = action.payload ;
+    },
+    setScore2: (state, action) => {
+      state.score2 = action.payload;
+    },
   },
   extraReducers: (builder) => {
    
   },
 });
 
-export const { setBoard, setPlayers, setStatus, setTime, setTurn, setWinner} = gameSlice.actions;
+export const { setScore1, setScore2,setBoard, setPlayers, setStatus, setTime, setTurn, setWinner} = gameSlice.actions;
 
 export const selectGame = (state: RootState) => state.game;
 

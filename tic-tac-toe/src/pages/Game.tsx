@@ -13,7 +13,7 @@ interface Props {
   status: string;
   players: string[]
   turn: string
-  handleClick(index: number): void;
+  handleClick: any;
   handleRestart(): void;
 
 }
@@ -59,7 +59,7 @@ const Game = (props: Props) => {
   
   function isFinished() {
     if(status === 'started' && time === 0) { 
-      return(<PlayerLabel>time out - {turn === 'X' ? players[1]: players[0]}</PlayerLabel>)
+      return(<PlayerLabel>time out - {turn === 'X' ? players[1]: players[0]} won!</PlayerLabel>)
     }else if(status === 'started') {
       return (<PlayerLabel>{turn === 'X' ? players[0] : players[1]}'s turn</PlayerLabel>)
     }else if(status === 'finished') {
@@ -81,6 +81,7 @@ const Game = (props: Props) => {
               key={index}
               value={value}
               index={index}
+              time={time}
               handleClick={handleClick}
             />
           ))}
