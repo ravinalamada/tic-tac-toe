@@ -3,7 +3,7 @@ import styled from 'styled-components'
 interface Props {
     index: number;
     value: string;
-    time: number
+    winner: string | null;
     handleClick(index: number): void;
   }
 
@@ -16,9 +16,9 @@ const Button = styled.button`
   border-color: transparent;
 `  
   const Square = (props: Props) => {
-    const { index, value, handleClick, time } = props;
+    const { index, value, handleClick, winner } = props;
     return (
-      <Button onClick={() => time > 0 && handleClick(index)}>
+      <Button onClick={() => !winner && handleClick(index)}>
         {value}
       </Button>
     );

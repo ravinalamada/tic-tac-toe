@@ -18,7 +18,7 @@ const initialState: gameState = {
   winner: null,
   players: ['', ''],
   turn: 'X',
-  time: 3,
+  time: 5,
   score1: 0,
   score2: 0,
 };

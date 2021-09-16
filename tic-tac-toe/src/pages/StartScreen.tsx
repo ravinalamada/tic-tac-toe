@@ -1,4 +1,4 @@
-import { useMemo, FormEvent} from "react";
+import {  FormEvent} from "react";
 import styled from 'styled-components';
 import ellipseIcon from '../icons/ellipse.svg'
 import crossIcon from '../icons/cross.svg'
@@ -38,7 +38,7 @@ export const Time = styled.p `
       line-height: 48px;
       color: #8B8585;
       padding-left: 16px;
-      width: 28px;
+      width: 50px;
       outline: none;
       border-color: transparent;
 
@@ -166,11 +166,9 @@ export interface FormProps{
    players: string[]
 }
 
+
+
 export const StartScreen=(props: FormProps)=> {
-
-  
-
-
   const { handleStart, time, players } = props;
   const dispatch = useAppDispatch();
   
@@ -185,14 +183,8 @@ export const StartScreen=(props: FormProps)=> {
     dispatch(setTime(value))
   };
 
-  const canStart = useMemo(
-    () => players.every((player: string) => player && player.length > 0),
-    [players]
-  );
-
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!canStart) return;
     handleStart && handleStart(players)
   };
   

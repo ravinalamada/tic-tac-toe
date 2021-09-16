@@ -28,7 +28,6 @@ const Heading = styled.h1`
     line-height: 29px;
     padding-block-end: 50px;
   `}
-
 `;
 const Home =() =>  {
   const dispatch = useAppDispatch()
@@ -89,7 +88,7 @@ useEffect(() => {
     dispatch(setBoard(newBoard));
     const newTurn = turn === "X" ? "O" : "X";
     dispatch(setTurn(newTurn));
-    dispatch(setTime(3))
+    dispatch(setTime(time > 0 && 5))
   };
   const handleStart = (players: string[]) => {
     dispatch(setPlayers(players));
@@ -100,35 +99,41 @@ useEffect(() => {
   const handleRestart = () => {
     dispatch(setBoard(Array(9).fill("")));
     dispatch(setStatus("consecutive"));
-    dispatch(setTime(3))
+    dispatch(setTime(5))
   };
 
   const startAgain = () => {
     dispatch(setBoard(Array(9).fill("")));
     dispatch(setWinner(""));
     dispatch(setStatus("started"));
-    dispatch(setTime(time > 0 && 3))
+    dispatch(setTime(5))
   } 
 
-  useEffect(() => {
-  if(status === 'started' && time === 0 && turn === 'O') {
-    dispatch(setScore2(score2 + 1))
-  }if(status === 'started' && time === 0 && turn === 'X') {
-    dispatch(setScore2(score2 + 1))
-  }
-  else if(winner && winner === players[0]) {
-      dispatch(setScore1(score1+ 1))
-    }else if(winner && winner === players[1]){
-      dispatch(setScore2(score2 + 1))
-  }
-  },[winner,turn, time, players])
+ useEffect(() => {
+   if(time === 0 && turn === 'X') {
+     dispatch(setWinner(players[1]))
+     dispatch(setStatus('finished'))
+   }else if(time === 0 && turn === 'O') {
+    dispatch(setWinner(players[0]))
+    dispatch(setStatus('finished'))
+ 
+   }
+  }, [time, turn])
+
+ useEffect(() => {
+    if(winner && winner === players[0]) {
+       dispatch(setScore1(score1 + 1))
+     }else if(winner && winner === players[1]){
+       dispatch(setScore2(score2 + 1))
+   }
+   },[winner, players])
 
   const rebootGame = () => {
     dispatch(setBoard(Array(9).fill("")));
     dispatch(setWinner(""));
     dispatch(setPlayers(['', '']))
     dispatch(setStatus("new"));
-    dispatch(setTime(3))
+    dispatch(setTime(5))
     dispatch(setScore1(0))
     dispatch(setScore2(0))
   }
@@ -138,8 +143,8 @@ useEffect(() => {
       <Heading>Tic tac toe</Heading>
       { status === "new" && <StartScreen players={players} time={time} handleStart={handleStart} /> }
       { status === "consecutive" && <ConsecutiveGame score2={score2} score1={score1} time={time} players={players} startAgain={startAgain} rebootGame={rebootGame}/> }
-      { status === "finished" && <Game players={players} turn={turn} winner={winner} time={time} status={status} player={players} board={board} handleClick={handleClick} handleRestart={handleRestart} /> }
-      { status === "started" && <Game players={players} turn={turn} winner={winner} time={time} status={status} player={players} board={board} handleClick={handleClick} handleRestart={handleRestart}/> }
+      { status === "finished" && <Game players={players} turn={turn} winner={winner} time={time} status={status}  board={board} handleClick={handleClick} handleRestart={handleRestart} /> }
+      { status === "started" && <Game players={players} turn={turn} winner={winner} time={time} status={status} board={board} handleClick={handleClick} handleRestart={handleRestart}/> }
     </div>
   );
 }
