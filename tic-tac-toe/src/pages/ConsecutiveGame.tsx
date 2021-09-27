@@ -12,6 +12,9 @@ interface Props {
     startAgain:() => void;
     score1: number
     score2: number
+    AIScore: number
+    AI_X: number
+    AI_O: number
 }
 
 const Wrapper = styled.div`
@@ -40,19 +43,41 @@ const Name = styled.p`
   `}
 `;
 export const ConsecutiveGame =(props: Props)=> {
-    const {rebootGame, startAgain, time, players, score1, score2} = props
-  
-    return (
-    <Form>
-        <FormWrapper>
+    const {rebootGame, startAgain, time, players, score1, score2,AI_O, AI_X, AIScore} = props
+    
+    function displayScore() {
+      if(players[0] === '' &&  players[1] ! == '' || players[0] !== '' &&  players[1] === '') {
+        return (
+          <>
           <Fieldset>
-            <Icons src={ellipseIcon} alt="ellipse" />
-              <Name>{score1} - {players[0]}</Name> 
+            <Icons src={ellipseIcon} alt="ellipse" /> 
+                <Name>{players[0] === '' ?  AIScore :score1} - {players[0]}</Name> 
           </Fieldset>
           <Fieldset>
             <Icons src={crossIcon} alt='cross'/>
-            <Name>{score2} - {players[1]}</Name>
+            <Name>{players[1] === '' ? AIScore: score2} - {players[1]}</Name>
           </Fieldset>
+          </>
+        )
+      }else if(players[0] === '' && players[1] === '') {
+         return(
+          <>
+          <Fieldset>
+            <Icons src={ellipseIcon} alt="ellipse" /> 
+                <Name>{players[0] === '' && AI_X} - {players[0]}</Name> 
+          </Fieldset>
+          <Fieldset>
+            <Icons src={crossIcon} alt='cross'/>
+            <Name>{players[1] === '' && AI_O} - {players[1]}</Name>
+          </Fieldset>
+          </>
+         )
+      }
+    }
+    return (
+    <Form>
+        <FormWrapper>
+          {displayScore()}
           <Time>turn Time limit in seconds:
           <span>{time}s</span>
           </Time>

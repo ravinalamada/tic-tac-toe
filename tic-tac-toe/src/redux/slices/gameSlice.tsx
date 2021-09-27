@@ -2,14 +2,17 @@ import { createSlice, } from '@reduxjs/toolkit';
 import { RootState } from '../../redux/store';
 
 export interface gameState {
-  board: string[];
+  board: any[];
   status: string;
   winner: string | null;
   players: string[];
   turn: string;
   score1: number;
   score2: number
+  AIScore: number
   time: number
+  AI_X: number
+  AI_O: number
 }
 
 const initialState: gameState = {
@@ -21,6 +24,9 @@ const initialState: gameState = {
   time: 5,
   score1: 0,
   score2: 0,
+  AIScore: 0,
+  AI_X: 0,
+  AI_O: 0
 };
 
 export const gameSlice = createSlice({
@@ -52,13 +58,21 @@ export const gameSlice = createSlice({
     setScore2: (state, action) => {
       state.score2 = action.payload;
     },
+    setAIScore: (state, action) => {
+      state.AIScore = action.payload;
+    },
+    setAI_X: (state, action) => {
+      state.AI_X = action.payload;
+    },setAI_O: (state, action) => {
+      state.AI_O = action.payload;
+    },
   },
   extraReducers: (builder) => {
    
   },
 });
 
-export const { setScore1, setScore2,setBoard, setPlayers, setStatus, setTime, setTurn, setWinner} = gameSlice.actions;
+export const {setAI_X, setAI_O, setScore1, setScore2,setBoard, setPlayers, setStatus, setTime, setTurn, setWinner, setAIScore} = gameSlice.actions;
 
 export const selectGame = (state: RootState) => state.game;
 

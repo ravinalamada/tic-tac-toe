@@ -179,7 +179,7 @@ const Game = (props: Props) => {
   
   function isFinished() {    
      if(status === 'started') {
-      return (<PlayerLabel>{turn === 'X' ? players[0] : players[1]}'s turn</PlayerLabel>)
+      return (<PlayerLabel>{turn === 'X' ? players[0] === '' ? 'Computer' : players[0] : players[1] === '' ? 'Computer' : players[1]}'s turn</PlayerLabel>)
     }else if(isTimeOut &&  status === 'finished' ) {
       return (
         <PlayerLabel>
