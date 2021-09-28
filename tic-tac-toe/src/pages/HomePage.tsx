@@ -204,15 +204,15 @@ useEffect(() => {
 
  useEffect(() => {
 
-    if(players[0] !== '' && winner === players[0]) {
+    if(winner && winner === players[0]) {
        dispatch(setScore1(score1 + 1))
-     }else if(players[1] !== '' && winner === players[1]){
+     }else if(winner && winner === players[1]){
        dispatch(setScore2(score2 + 1))
-   }else if(winner === 'AI') {
+   }else if(winner && winner === 'AI') {
       dispatch(setAIScore(AIScore + 1))
-   }else if(winner === 'AI_X') {
+   }else if(winner && winner === 'AI_X') {
     dispatch(setAI_X(AI_X + 1))
- }else if(winner === 'AI_O') {
+ }else if(winner && winner === 'AI_O') {
   dispatch(setAI_O(AI_O + 1))
  
 }
@@ -231,7 +231,7 @@ useEffect(() => {
                   const newTurn = turn === "X" ? "O" : "X";
                   dispatch(setTurn(newTurn));
 
-                 }, 1000)
+                 }, 500)
                   
                 }
           }
